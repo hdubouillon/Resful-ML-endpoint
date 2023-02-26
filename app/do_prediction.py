@@ -14,7 +14,7 @@ def predict(flatten_image):
     """
     
     # load the model
-    model = load_model('model/best_dense_nn_fashion_mnist')
+    model = load_model('app/model/best_dense_nn_fashion_mnist')
     # do the prediction
     flatten_image = pd.DataFrame([flatten_image])
     prediction = model.predict(flatten_image/255)

@@ -8,7 +8,7 @@ import numpy as np
 
 
 # The path for the new data
-new_training_data_path = 'data/fashion-mnist-train-2.csv'
+new_training_data_path = 'app/data/fashion-mnist-train-2.csv'
 
 
 def update_model_pipeline(new_training_data_path):
@@ -22,7 +22,7 @@ def update_model_pipeline(new_training_data_path):
     
     # Load data
     train = pd.read_csv(new_training_data_path)
-    test = pd.read_csv('data/fashion-mnist_test.csv')
+    test = pd.read_csv('app/data/fashion-mnist_test.csv')
 
     # Create X and y for train and test
     X_train = train.drop(columns='label')
@@ -35,12 +35,12 @@ def update_model_pipeline(new_training_data_path):
     X_test = X_test / 255.0
 
     # Load the best model
-    model = load_model('model/best_dense_nn_fashion_mnist')
+    model = load_model('app/model/best_dense_nn_fashion_mnist')
     best_model = model
 
     # Train the model with the new data
     es = EarlyStopping(monitor='accuracy', mode='auto', verbose=0, patience=20)
-    mc = ModelCheckpoint('model/new_dense_nn_fashion_mnist', monitor='val_accuracy', mode='max', verbose=0, save_best_only=True)
+    mc = ModelCheckpoint('app/model/new_dense_nn_fashion_mnist', monitor='val_accuracy', mode='max', verbose=0, save_best_only=True)
     model.compile(optimizer='adam', loss ='sparse_categorical_crossentropy', metrics = ['accuracy'])
     history = model.fit(X_train, y_train, validation_split=0.2, epochs=500, batch_size=256, callbacks=[es, mc])
 
@@ -52,8 +52,8 @@ def update_model_pipeline(new_training_data_path):
     if model_accuracy > best_model_accuracy:
         print(f'Accuracy improved from: {best_model_accuracy} to: {model_accuracy}')
         y_pred = model.predict(X_test)
-        pd.Series(np.argmax(y_pred, axis=1)).to_csv('predictions/best_predictions_fashion_mnist.csv', index=False)
-        save_model(model, 'model/best_dense_nn_fashion_mnist')
+        pd.Series(np.argmax(y_pred, axis=1)).to_csv('app/predictions/best_predictions_fashion_mnist.csv', index=False)
+        save_model(model, 'app/model/best_dense_nn_fashion_mnist')
 
 
 if __name__ == "__main__":
